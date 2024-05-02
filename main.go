@@ -3,14 +3,13 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"time"
-
 	_ "modernc.org/sqlite"
+	"time"
 )
 
 const (
 	ParcelStatusRegistered = "registered"
-	ParcelStatusSent       = "sent"
+	ParcelStatusSent       = ""
 	ParcelStatusDelivered  = "delivered"
 )
 
