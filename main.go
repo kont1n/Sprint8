@@ -3,8 +3,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "modernc.org/sqlite"
 	"time"
+
+	_ "modernc.org/sqlite"
 )
 
 const (
@@ -102,7 +103,12 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	defer db.Close()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+
+		}
+	}(db)
 
 	// создайте объект ParcelStore функцией NewParcelStore
 	store := NewParcelStore(db)
