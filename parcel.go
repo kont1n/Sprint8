@@ -115,9 +115,22 @@ func (s ParcelStore) SetAddress(number int, address string) error {
 }
 
 func (s ParcelStore) Delete(number int) error {
-	_, err := s.db.Exec("DELETE FROM parcel WHERE number = :number", sql.Named("number", number))
+	rows, err := s.db.Query("SELECT status FROM parcel WHERE number = :number", sql.Named("number", number))
 	if err != nil {
 		return err
+	}
+	var status string
+	for rows.Next() {
+		err = rows.Scan(&status)
+		if err != nil {
+			return err
+		}
+	}
+	if status == "registered" {
+		_, err := s.db.Exec("DELETE FROM parcel WHERE number = :number", sql.Named("number", number))
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

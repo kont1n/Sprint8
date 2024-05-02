@@ -45,7 +45,7 @@ func (s ParcelService) Register(client int, address string) (Parcel, error) {
 
 	parcel.Number = id
 
-	fmt.Printf("Новая посылка № %d на адрес %s от клиента с идентификатором %d зарегистрирована %s\n",
+	fmt.Printf("Новая посылка № %d на адрес %s от клиента с идентификатором %d зарегистрирована %s\n\n",
 		parcel.Number, parcel.Address, parcel.Client, parcel.CreatedAt)
 
 	return parcel, nil
@@ -83,7 +83,7 @@ func (s ParcelService) NextStatus(number int) error {
 		return nil
 	}
 
-	fmt.Printf("У посылки № %d новый статус: %s\n", number, nextStatus)
+	fmt.Printf("У посылки № %d новый статус: %s\n\n", number, nextStatus)
 
 	return s.store.SetStatus(number, nextStatus)
 }
