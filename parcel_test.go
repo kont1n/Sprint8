@@ -140,7 +140,7 @@ func TestSetStatus(t *testing.T) {
 	// получите добавленную посылку и убедитесь, что статус обновился
 	p, err := store.Get(number)
 	require.NoError(t, err)
-	require.Equal(t, p.Status, status)
+	assert.Equal(t, p.Status, status)
 }
 
 // TestGetByClient проверяет получение посылок по идентификатору клиента
