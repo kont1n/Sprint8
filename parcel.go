@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"errors"
 
 	_ "modernc.org/sqlite"
 )
@@ -87,48 +86,22 @@ func (s ParcelStore) SetStatus(number int, status string) error {
 func (s ParcelStore) SetAddress(number int, address string) error {
 	// реализуйте обновление адреса в таблице parcel
 	// менять адрес можно только если значение статуса registered
-	rows, err := s.db.Query("SELECT status FROM parcel WHERE number = :number", sql.Named("number", number))
+	var _, err = s.db.Exec("UPDATE parcel SET address = :address WHERE number = :number and status = :status",
+		sql.Named("address", address),
+		sql.Named("number", number),
+		sql.Named("status", ParcelStatusRegistered))
 	if err != nil {
-		return err
-	}
-	var status string
-	for rows.Next() {
-		err = rows.Scan(&status)
-		if err != nil {
-			return err
-		}
-	}
-	if status == "registered" {
-		var _, err = s.db.Exec("UPDATE parcel SET address = :address WHERE number = :number",
-			sql.Named("address", address),
-			sql.Named("number", number))
-		if err != nil {
-			return err
-		}
-	} else {
-		err = errors.New("status is not 'registered'")
 		return err
 	}
 	return nil
 }
 
 func (s ParcelStore) Delete(number int) error {
-	rows, err := s.db.Query("SELECT status FROM parcel WHERE number = :number", sql.Named("number", number))
+	_, err := s.db.Exec("DELETE FROM parcel WHERE number = :number and status = :status",
+		sql.Named("number", number),
+		sql.Named("status", ParcelStatusRegistered))
 	if err != nil {
 		return err
-	}
-	var status string
-	for rows.Next() {
-		err = rows.Scan(&status)
-		if err != nil {
-			return err
-		}
-	}
-	if status == "registered" {
-		_, err := s.db.Exec("DELETE FROM parcel WHERE number = :number", sql.Named("number", number))
-		if err != nil {
-			return err
-		}
 	}
 	return nil
 }
